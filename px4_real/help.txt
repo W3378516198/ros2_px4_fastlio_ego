@@ -1,0 +1,85 @@
+暂时修改雷达ip
+sudo ip addr replace 192.168.1.50/24 dev enP3p49s0
+sudo ip link set enP3p49s0 up
+
+
+永久修改雷达ip：
+先看 NetworkManager 是否管理这个网卡：
+nmcli dev status
+如果能看到 enP3p49s0，执行：
+sudo nmcli con add type ethernet ifname enP3p49s0 con-name livox-static \
+  ipv4.method manual \
+  ipv4.addresses 192.168.1.50/24 \
+  ipv4.never-default yes \
+  ipv6.method ignore \
+  connection.autoconnect yes
+然后启动这个连接：
+sudo nmcli con up livox-static
+
+
+香橙派终端1处理雷达数据：
+source /opt/ros/humble/setup.bash
+source ~/plane_ws/install/setup.bash
+export ROS_DOMAIN_ID=0
+export ROS_LOCALHOST_ONLY=0
+ros2 launch livox_ros_driver2 msg_MID360s_launch.py
+
+
+香橙派终端2处理fastlio2：
+source /opt/ros/humble/setup.bash
+source ~/plane_ws/install/setup.bash
+export ROS_DOMAIN_ID=0
+export ROS_LOCALHOST_ONLY=0
+ros2 launch fast_lio mapping.launch.py config_file:=mid360.yaml rviz:=false
+
+
+香橙派终端3开启ego-planner：
+source /opt/ros/humble/setup.bash
+source ~/plane_ws/install/setup.bash
+ros2 launch ego_planner real_mid360s.launch.py
+
+
+香橙派终端4启动microagent：
+MicroXRCEAgent serial --dev /dev/ttyS1 -b 921600
+
+
+香橙派终端5定位桥接：
+source ~/plane_ws/install/setup.bash
+ros2 run fastlio_px4_bridge fastlio_to_px4_visual_odometry \
+  --ros-args \
+  -p input_odom_topic:=/Odometry \
+  -p publish_orientation:=false \
+  -p publish_velocity_from_delta:=false
+（3）
+source ~/plane_ws/install/setup.bash
+ros2 run fastlio_px4_bridge fastlio_to_px4_visual_odometry \
+  --ros-args \
+  -p input_odom_topic:=/Odometry \
+  -p publish_orientation:=false \
+  -p publish_velocity_from_delta:=true
+（7）
+
+
+电脑终端显示雷达画面：
+source /opt/ros/humble/setup.bash
+export ROS_DOMAIN_ID=0
+export ROS_LOCALHOST_ONLY=0
+ros2 topic list
+rviz2
+
+
+
+
+
+
+
+
+
+
+螺旋桨旋转测试指令：ros2 run velocity_offboard velocity_offboard_test   --ros-args   -p vx:=0.0   -p vy:=0.0   -p vz:=0.0   -p auto_offboard:=true   -p auto_arm:=true
+设置飞控模式：param set EKF2_EV_CTRL 3
+            param save
+            reboot
+启动qgroundcontrol：cd ~/Downloads
+                   chmod +x ./QGroundControl-x86_64.AppImage
+                   ./QGroundControl-x86_64.AppImage

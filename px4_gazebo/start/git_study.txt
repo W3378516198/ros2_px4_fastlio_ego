@@ -1,0 +1,56 @@
+git init        (初始化)
+git status      (查看状态)
+git add .       (添加到缓冲区)
+git commit -m "完成基础仿真"        (提交)    
+git tag v1.0.0      （添加版本标签）
+git tag -d v1       （删除某个版本标签，此处删除v1）
+git log --oneline       （查看）
+
+
+# 1. 关联远程地址（把 https://... 换成你 Gitee 上实际的地址）
+git remote add origin https://gitee.com/你的用户名/px4_gazebo.git
+（如果填写错误）
+git remote set-url origin https://gitee.com/你的用户名/px4_gazebo.git
+
+# 2. 把本地代码推上去
+git push -u origin master
+
+# 3. 把标签也推上去
+git push origin --tags
+
+
+# 查看当前远程地址
+git remote -v
+
+# 删除错误的 origin
+git remote remove origin
+
+# 重新添加正确的
+git remote add origin https://gitee.com/W3378516198/px4_gazebo.git
+
+
+
+git内置教程：
+
+Git 全局设置:
+
+git config --global user.name "W3378516198"
+git config --global user.email "16885327+w3378516198@user.noreply.gitee.com"
+
+创建 git 仓库:
+
+mkdir px4_gazebo
+cd px4_gazebo
+git init 
+touch README.md
+git add README.md
+git commit -m "first commit"
+git remote add origin https://gitee.com/w3378516198/px4_gazebo.git
+git push -u origin "master"
+
+已有仓库?
+
+cd existing_git_repo
+git remote add origin https://gitee.com/w3378516198/px4_gazebo.git
+git push -u origin "main"
+

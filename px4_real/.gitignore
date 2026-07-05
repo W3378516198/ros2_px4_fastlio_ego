@@ -1,0 +1,16 @@
+# 忽略 ROS 2 编译和运行产生的文件夹
+**/build/
+**/install/
+**/log/
+
+# 忽略临时文件和 Python 编译缓存
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+
+# 忽略系统文件
+.DS_Store
+Thumbs.db

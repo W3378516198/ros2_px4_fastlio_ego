@@ -1,0 +1,45 @@
+启动仿真：
+cd PX4-Autopilot
+make px4_sitl gz_x500
+
+启动agent：MicroXRCEAgent udp4 -p 8888
+
+创建tf坐标：
+source /opt/ros/humble/setup.bash
+source ~/ws_ros_gz/install/setup.bash
+ros2 run tf2_ros static_transform_publisher 0 0 0 0 0 0 map x500_0/base_link/mid360s
+
+开启ros——gz桥：
+cd ws_ros_gz
+source install/setup.bash
+ros2 run ros_gz_bridge parameter_bridge "/mid360s/points/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked" "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock"
+
+
+关闭地面基站：param set NAV_DLL_ACT 0
+
+
+如果手动开一个新终端运行 RViz2，请务必带上这个参数：
+rviz2 --ros-args -p use_sim_time:=true
+
+
+start_uav.sh启动命令：
+cd ~/px4_gazebo/start
+chmod +x start_uav.sh
+./start_uav.sh
+
+发布目标命令：
+ros2 topic pub --once /goal_pose geometry_msgs/msg/PoseStamped "{
+  header: {
+    frame_id: 'odom_world'
+  },
+  pose: {
+    position: {
+      x: 3.0,
+      y: 0.0,
+      z: 2.0
+    },
+    orientation: {
+      w: 1.0
+    }
+  }
+}"
