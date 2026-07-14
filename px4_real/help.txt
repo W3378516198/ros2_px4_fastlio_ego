@@ -77,9 +77,16 @@ rviz2
 
 
 螺旋桨旋转测试指令：ros2 run velocity_offboard velocity_offboard_test   --ros-args   -p vx:=0.0   -p vy:=0.0   -p vz:=0.0   -p auto_offboard:=true   -p auto_arm:=true
+飞行测试：ros2 run velocity_offboard safe_takeoff_hold_test \
+  --ros-args \
+  -p hold_height:=0.5 \
+  -p auto_offboard:=true \
+  -p auto_arm:=false \
+  -p max_runtime:=30.0
 设置飞控模式：param set EKF2_EV_CTRL 3
             param save
             reboot
 启动qgroundcontrol：cd ~/Downloads
                    chmod +x ./QGroundControl-x86_64.AppImage
                    ./QGroundControl-x86_64.AppImage
+

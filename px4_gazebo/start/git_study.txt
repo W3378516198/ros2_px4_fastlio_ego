@@ -54,3 +54,4 @@ cd existing_git_repo
 git remote add origin https://gitee.com/w3378516198/px4_gazebo.git
 git push -u origin "main"
 
+https://github.com/W3378516198/ros2_px4_fastlio_ego.git
